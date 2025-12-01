@@ -1,0 +1,4 @@
+pandas
+python-docx-template
+python-docx
+pywin32
