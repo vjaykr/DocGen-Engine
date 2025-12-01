@@ -5,6 +5,7 @@ import re
 import json
 import threading
 import traceback
+from datetime import datetime
 from pathlib import Path
 import pandas as pd
 from docxtpl import DocxTemplate
@@ -22,7 +23,6 @@ class SaralWorksApp:
         self.setup_window()
         self.setup_variables()
         self.setup_styles()
-        self.create_widgets()
         
         # Backend data
         self.template_path = ""
@@ -31,6 +31,9 @@ class SaralWorksApp:
         self.placeholders = []
         self.columns = []
         self.mapping = {}
+        self.generate_excel_btn = None
+        
+        self.create_widgets()
         
     def setup_window(self):
         # Enable DPI awareness for sharp fonts
@@ -230,29 +233,34 @@ class SaralWorksApp:
                                bg='white', fg='#1f2937')
         header_label.pack(anchor='w', padx=15, pady=(15, 12))
         
+        action_grid = tk.Frame(content_frame, bg='white')
+        action_grid.pack(fill='x', padx=15, pady=(0, 12))
+        for col in range(2):
+            action_grid.columnconfigure(col, weight=1)
+        
         # Auto map button (Body: 14px)
-        self.auto_map_btn = tk.Button(content_frame, text="✨ Auto Map Fields", 
-                                     font=('Segoe UI', 14, 'bold'), 
-                                     bg='#10b981', fg='white', height=2,
+        self.auto_map_btn = tk.Button(action_grid, text="Auto Map Fields", 
+                         font=('Segoe UI', 11, 'bold'), 
+                                     bg='#10b981', fg='white',
                                      relief='flat', bd=0, cursor='hand2',
                                      command=self.auto_map)
-        self.auto_map_btn.pack(fill='x', padx=15, pady=(0, 10))
+        self.auto_map_btn.grid(row=0, column=0, padx=(0, 8), pady=0, sticky='nsew', ipady=12)
         
-        # Clear map button (Body: 14px)
-        self.clear_btn = tk.Button(content_frame, text="🗑️ Clear Mapping", 
-                                  font=('Segoe UI', 14, 'bold'), 
-                                  bg='#ef4444', fg='white', height=2,
+        # Clear map button (Body: 14px
+        self.clear_btn = tk.Button(action_grid, text="Clear Mapping", 
+                      font=('Segoe UI', 11, 'bold'), 
+                                  bg='#ef4444', fg='white',
                                   relief='flat', bd=0, cursor='hand2',
                                   command=self.clear_mapping)
-        self.clear_btn.pack(fill='x', padx=15, pady=(0, 10))
+        self.clear_btn.grid(row=0, column=1, padx=(8, 0), pady=0, sticky='nsew', ipady=12)
         
         # Preview button (Body: 14px)
         self.preview_btn = tk.Button(content_frame, text="👁️ Preview Data", 
-                                    font=('Segoe UI', 14, 'bold'), 
-                                    bg='#3b82f6', fg='white', height=2,
+                        font=('Segoe UI', 11, 'bold'), 
+                                    bg='#3b82f6', fg='white',
                                     relief='flat', bd=0, cursor='hand2',
                                     command=self.preview_data)
-        self.preview_btn.pack(fill='x', padx=15, pady=(0, 15))
+        self.preview_btn.pack(fill='x', padx=15, pady=(0, 15), ipady=10)
         
     def create_settings_card(self, parent):
         # Glass morphism card
@@ -345,16 +353,37 @@ class SaralWorksApp:
                 bg='#f9fafb', fg='#6b7280').pack()
         
     def create_generate_button(self, parent):
-        generate_frame = tk.Frame(parent, bg='#f8fafc', height=80)
+        generate_frame = tk.Frame(parent, bg='#f8fafc', height=110)
         generate_frame.pack(fill='x', pady=(10, 0))
         generate_frame.pack_propagate(False)
         
-        self.generate_btn = tk.Button(generate_frame, text="🚀 Generate DOCX & PDF Files", 
+        button_row = tk.Frame(generate_frame, bg='#f8fafc')
+        button_row.pack(fill='x', padx=60, pady=20)
+        button_row.columnconfigure(0, weight=3)
+        button_row.columnconfigure(1, weight=2)
+        
+        self.generate_btn = tk.Button(button_row, text="🚀 Generate DOCX & PDF Files", 
                                      font=('Segoe UI', 16, 'bold'), 
                                      bg='#10b981', fg='white', height=2,
                                      relief='flat', bd=0, cursor='hand2',
                                      command=self.generate_documents)
-        self.generate_btn.pack(expand=True, fill='x', padx=60, pady=18)
+        self.generate_btn.grid(row=0, column=0, sticky='nsew', padx=(0, 12))
+        
+        self.generate_excel_btn = tk.Button(button_row, text="📑 Generate Excel Report", 
+                                           font=('Segoe UI', 14, 'bold'), 
+                                           bg='#10b981', fg='white', height=2,
+                                           relief='flat', bd=0, cursor='hand2',
+                                           state='disabled', command=self.generate_excel_report)
+        self.generate_excel_btn.grid(row=0, column=1, sticky='nsew', padx=(12, 0))
+        self.update_excel_button_state()
+
+    def update_excel_button_state(self):
+        if not self.generate_excel_btn:
+            return
+        if self.excel_path and not self.generating_var.get():
+            self.generate_excel_btn.config(state='normal')
+        else:
+            self.generate_excel_btn.config(state='disabled')
         
     # File selection methods
     def select_template(self):
@@ -378,6 +407,7 @@ class SaralWorksApp:
             self.excel_name_var.set(Path(file_path).name)
             self.show_toast(f"Excel loaded: {Path(file_path).name}")
             self.update_status("Excel ready")
+            self.update_excel_button_state()
             
     def select_folder(self):
         folder_path = filedialog.askdirectory(title="Select Output Folder")
@@ -606,6 +636,7 @@ class SaralWorksApp:
             
         self.generating_var.set(True)
         self.generate_btn.config(text="🔄 Generating...", state='disabled')
+        self.update_excel_button_state()
         
         def run_generation():
             try:
@@ -619,58 +650,151 @@ class SaralWorksApp:
                 docx_dir.mkdir(exist_ok=True)
                 pdf_dir.mkdir(exist_ok=True)
                 
+                name_counts = {}
+                generated_names = []
                 for idx, row in df.iterrows():
+                    if self._is_row_empty(row):
+                        generated_names.append("")
+                        continue
                     context = {ph: str(row.get(col, "")) for ph, col in self.mapping.items()}
                     tpl.render(context)
                     
-                    name = str(row.iloc[0]).strip() if len(row) > 0 else f"Document_{idx+1}"
-                    name = re.sub(r"[^\w\-_.]", "_", name) or "Document"
-                    
-                    if self.include_mobile_var.get():
-                        mobile = ""
-                        for col in df.columns:
-                            if any(x in col.lower() for x in ["mobile", "phone", "contact"]):
-                                m = re.sub(r"\D", "", str(row[col]))
-                                if len(m) >= 10:
-                                    mobile = m[-10:]
-                                    break
-                        if mobile:
-                            name += "_" + mobile
-                            
+                    name = self._build_filename(row, idx, name_counts)
+                    generated_names.append(name)
                     tpl.save(str(docx_dir / f"{name}.docx"))
                     
                 self.update_status("Converting to PDF...")
                 
                 word = win32com.client.Dispatch("Word.Application")
                 word.Visible = False
+                try:
+                    word.Options.DoNotCompressImagesInfile = True
+                except Exception:
+                    pass  # Older Word versions might not expose this option
                 
                 for docx_path in docx_dir.glob("*.docx"):
+                    pdf_path = str(pdf_dir / (docx_path.stem + ".pdf"))
                     doc = word.Documents.Open(str(docx_path.resolve()))
-                    doc.SaveAs(str(pdf_dir / (docx_path.stem + ".pdf")), FileFormat=17)
-                    doc.Close()
+                    try:
+                        try:
+                            doc.SaveAs2(
+                                str(docx_path.resolve()),
+                                FileFormat=16,  # wdFormatXMLDocument
+                                EmbedTrueTypeFonts=True,
+                                AddToRecentFiles=False,
+                                DoNotCompressImagesInfile=True,
+                            )
+                        except Exception:
+                            pass
+                        doc.ExportAsFixedFormat(
+                            OutputFileName=pdf_path,
+                            ExportFormat=17,  # wdExportFormatPDF
+                            OpenAfterExport=False,
+                            OptimizeFor=0,  # wdExportOptimizeForPrint (highest quality)
+                            Range=0,  # wdExportAllDocument
+                            Item=0,  # wdExportDocumentContent
+                            IncludeDocProps=True,
+                            KeepIRM=True,
+                            CreateBookmarks=1,  # wdExportCreateHeadingBookmarks
+                            DocStructureTags=True,
+                            BitmapMissingFonts=True,
+                            UseISO19005_1=False,
+                        )
+                    except Exception:
+                        # Fallback to SaveAs if ExportAsFixedFormat is unavailable
+                        doc.SaveAs(pdf_path, FileFormat=17)
+                    finally:
+                        doc.Close()
                     
                 word.Quit()
                 
-                self.root.after(0, lambda: self.generation_complete(docx_dir, pdf_dir))
+                result_df = df.copy()
+                self.root.after(0, lambda: self.generation_complete(docx_dir, pdf_dir, result_df, generated_names))
                 
             except Exception as e:
                 traceback.print_exc()
-                self.root.after(0, lambda: self.generation_error(str(e)))
+                error_msg = str(e)
+                self.root.after(0, lambda msg=error_msg: self.generation_error(msg))
                 
         threading.Thread(target=run_generation, daemon=True).start()
         
-    def generation_complete(self, docx_dir, pdf_dir):
+    def generation_complete(self, docx_dir, pdf_dir, dataframe=None, generated_names=None):
         self.generating_var.set(False)
         self.generate_btn.config(text="🚀 Generate DOCX & PDF Files", state='normal')
         self.update_status("All done!")
         self.show_toast("Generation Complete!")
-        messagebox.showinfo("Success!", f"Documents generated successfully!\n\nDOCX: {docx_dir}\nPDF: {pdf_dir}")
+        self.update_excel_button_state()
+        messagebox.showinfo(
+            "Success!",
+            "Documents generated successfully!\n\nDOCX: {}\nPDF: {}\n\nUse 'Generate Excel Report' to export the summary.".format(docx_dir, pdf_dir)
+        )
         
     def generation_error(self, error_msg):
         self.generating_var.set(False)
         self.generate_btn.config(text="🚀 Generate DOCX & PDF Files", state='normal')
         self.update_status("Error occurred")
         messagebox.showerror("Generation Error", f"Error: {error_msg}")
+        self.update_excel_button_state()
+        
+    def generate_excel_report(self):
+        if not self.excel_path:
+            messagebox.showinfo("Export", "Select an Excel file first.")
+            return
+        try:
+            df = pd.read_excel(self.excel_path, dtype=str).fillna("")
+            if df.empty:
+                messagebox.showinfo("Export", "Excel file is empty. Nothing to export.")
+                return
+            generated_names = self._compute_filenames(df)
+            report_df = df.copy()
+            report_df["Generated File"] = [f"{name}.pdf" if name else "" for name in generated_names]
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            report_path = Path(self.output_folder) / f"DocGen-Engine_Report_{timestamp}.xlsx"
+            report_df.to_excel(report_path, index=False)
+            self.show_toast(f"Report exported: {report_path}")
+            messagebox.showinfo("Export", f"Summary saved to:\n{report_path}")
+        except Exception as e:
+            traceback.print_exc()
+            messagebox.showerror("Export", f"Failed to export summary: {e}")
+    
+    def _compute_filenames(self, df):
+        name_counts = {}
+        filenames = []
+        for idx, row in df.iterrows():
+            if self._is_row_empty(row):
+                filenames.append("")
+                continue
+            filenames.append(self._build_filename(row, idx, name_counts))
+        return filenames
+    
+    def _build_filename(self, row, idx, name_counts):
+        name = str(row.iloc[0]).strip() if len(row) > 0 else f"Document_{idx+1}"
+        name = re.sub(r"[^\w\-_.]", "_", name) or "Document"
+        
+        if self.include_mobile_var.get():
+            mobile = ""
+            for col in row.index:
+                col_lower = str(col).lower()
+                if any(x in col_lower for x in ["mobile", "phone", "contact"]):
+                    m = re.sub(r"\D", "", str(row[col]))
+                    if len(m) >= 10:
+                        mobile = m[-10:]
+                        break
+            if mobile:
+                name += "_" + mobile
+        
+        base_name = name
+        count = name_counts.get(base_name, 0) + 1
+        name_counts[base_name] = count
+        if count > 1:
+            name = f"{base_name}_{count}"
+        return name
+
+    def _is_row_empty(self, row):
+        for value in row:
+            if str(value).strip():
+                return False
+        return True
         
     def show_toast(self, message):
         # Simple status update (could be enhanced with actual toast notifications)
