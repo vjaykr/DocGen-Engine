@@ -5,9 +5,9 @@ DocGen Engine is a professional desktop application for automated document gener
 
 ![DocGen Engine Interface](image.png)
 
-<iframe width="964" height="542" src="https://www.youtube.com/embed/iBagwUeEIn0" title="Automate Certificate &amp; Document Generation with Python | DocGen Engine Full Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![Watch the video](https://img.youtube.com/vi/iBagwUeEIn0/hqdefault.jpg)](https://youtu.be/iBagwUeEIn0)
 
-[Watch the tutorial on YouTube](https://youtu.be/iBagwUeEIn0?si=myVqZyUXeW0SIBCi)
+[Tutorial video on YouTube](https://youtu.be/iBagwUeEIn0)
 
 ## 🚀 Features
 
