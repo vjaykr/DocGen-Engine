@@ -26,8 +26,12 @@ A professional desktop application for automated document generation from Excel 
 
 ### Option 1: Download Executable (Recommended)
 1. Download `DocGen Engine.exe` directly from this repository
-2. Run the executable - it will automatically install required dependencies
-3. Start using the application immediately
+2. Run:
+   ```bash
+   pip install pandas docxtpl python-docx pywin32 tkinter
+   ```
+3. Run the executable - it will automatically install required dependencies
+4. Start using the application immediately
 
 ### Option 2: Build from Source
 1. Clone the repository:
