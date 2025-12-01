@@ -614,8 +614,8 @@ class SaralWorksApp:
                 df = pd.read_excel(self.excel_path, dtype=str).fillna("")
                 tpl = DocxTemplate(self.template_path)
                 
-                docx_dir = Path(self.output_folder) / "SaralWorks_DOCX"
-                pdf_dir = Path(self.output_folder) / "SaralWorks_PDF"
+                docx_dir = Path(self.output_folder) / "DocGen-Engine_DOCX"
+                pdf_dir = Path(self.output_folder) / "DocGen-Engine_PDF"
                 docx_dir.mkdir(exist_ok=True)
                 pdf_dir.mkdir(exist_ok=True)
                 
