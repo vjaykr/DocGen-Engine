@@ -5,7 +5,6 @@ DocGen Engine is a professional desktop application for automated document gener
 
 ![DocGen Engine Interface](image.png)
 
-[![Watch the video](https://img.youtube.com/vi/iBagwUeEIn0/hqdefault.jpg)](https://youtu.be/iBagwUeEIn0)
 
 [Tutorial video on YouTube](https://youtu.be/iBagwUeEIn0)
 
