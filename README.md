@@ -1,94 +1,182 @@
-# DocGen Engine
+DocGen Engine
 
-A professional desktop application for automated document generation from Excel data and Word templates. Built with Python and Tkinter, featuring an intuitive GUI for seamless document processing and PDF conversion.
+A Professional Desktop Application for Automated Document Generation from Excel Data and Word Templates.
+
+DocGen Engine is a fast, intuitive, and powerful document automation platform built with Python, Tkinter, DocxTemplate, and Excel processing libraries. It allows you to generate personalized DOCX and PDF documents using Word templates and bulk Excel data — all through a clean, modern GUI.
+
+🚀 Features
+
+Template-Based Document Generation using .docx placeholders
+
+Excel Data Integration with .xlsx and .xls support
+
+Smart Auto-Mapping between template fields and Excel columns
+
+DOCX + PDF Output (Microsoft Word required for PDF conversion)
+
+Batch Processing for unlimited document creation
+
+Custom File Naming Rules including mobile numbers and variables
+
+Live Preview of mapped fields before generation
+
+Modern UI using glass-morphism and responsive Tkinter widgets
+
+Integrated Logging for debugging and error reporting
+
+📋 System Requirements
+
+Windows 10 or Windows 11
+
+Microsoft Word installed (for PDF export)
+
+Python 3.8+ (only required for Methods 2 & 3)
+
+🔧 Installation & Usage Guide
+
+Choose from three methods, based on your needs:
+
+✔️ Method 1: Download EXE → Run directly (no Python required)
+
+✔️ Method 2: Clone repo → Install modules → Run Python script
+
+✔️ Method 3: Clone repo → Build your own EXE using PyInstaller
+
+🟦 Method 1 — Download the EXE & Run (Recommended for Non-Developers)
+
+This is the simplest method. No Python installation required.
+
+Step 1 — Download the Executable
+
+Go to the GitHub repository
+
+Navigate to Releases
+
+Download:
+DocGen Engine.exe or DocGen-Engine.zip
+
+Step 2 — Extract (if zipped)
+
+Right-click → Extract All
+
+Step 3 — Run the Application
+
+Double-click:
+
+DocGen Engine.exe
+
+Step 4 — Install Missing Dependencies (Only if prompted)
+
+Some systems may require the following packages once:
+
+pip install pandas docxtpl python-docx pywin32 tkinter
 
 
+After installation, simply re-run the EXE.
 
-## 🚀 Features
+🟩 Method 2 — Clone Repository & Run Python Source (For Developers)
 
-- **Template-Based Document Generation**: Use Word (.docx) templates with placeholder fields
-- **Excel Data Integration**: Import data from Excel files (.xlsx, .xls) for bulk document creation
-- **Intelligent Field Mapping**: Auto-map template placeholders to Excel columns with smart matching
-- **Dual Output Format**: Generate both DOCX and PDF versions of documents
-- **Batch Processing**: Process multiple records simultaneously
-- **Custom File Naming**: Include mobile numbers or custom naming patterns
-- **Real-time Preview**: Preview data mapping before generation
-- **Professional UI**: Modern, responsive interface with glass morphism design
-!
-![DocGen Engine Interface](image.png)
-## 📋 Requirements
+Perfect for debugging, editing UI, or extending the tool.
 
-- Windows 10/11
-- Microsoft Word (for PDF conversion)
-- Python 3.8+ (for development)
+Step 1 — Clone Repo
+git clone https://github.com/vjaykr/DocGen-Engine.git
+cd DocGen-Engine
 
-## 🔧 Installation
+Step 2 — (Optional) Create Virtual Environment
+python -m venv .venv
+.venv\Scripts\activate
 
-### Option 1: Download Executable (Recommended)
-1. Download `DocGen Engine.exe` directly from this repository
-2. Run:
-   ```bash
-   pip install pandas docxtpl python-docx pywin32 tkinter
-   ```
-3. Run the executable - it will automatically install required dependencies
-4. Start using the application immediately
+Step 3 — Install Required Python Dependencies
 
-### Option 2: Build from Source
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/docgen-engine.git
-   cd docgen-engine
-   ```
+Either use the requirements file:
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+pip install -r requirements.txt
 
-3. Run the application:
-   ```bash
-   python launcher.py
-   ```
 
-4. Build executable (optional):
-   ```bash
-   exe_build.bat
-   ```
+Or install manually:
 
-## 📖 How to Use
+pip install pandas docxtpl python-docx pywin32 tkinter
 
-### Step 1: Prepare Your Template
-1. Create a Word document (.docx) with placeholder fields
-2. Use double curly braces for placeholders: `{{field_name}}`
-3. Example: `Dear {{name}}, your order {{order_id}} is ready.`
+Step 4 — Run the Application
+python launcher.py
 
-### Step 2: Prepare Your Data
-1. Create an Excel file (.xlsx/.xls) with your data
-2. Use column headers that match or relate to your template placeholders
-3. Each row represents one document to be generated
 
-### Step 3: Generate Documents
-1. **Launch Application**: Run `DocGen Engine.exe`
-2. **Select Files**:
-   - Choose your Word template
-   - Select your Excel data file
-   - Set output folder (optional)
-3. **Scan Placeholders**: Click "🔍 Scan Placeholders" to detect template fields
-4. **Map Fields**: 
-   - Use "✨ Auto Map Fields" for automatic mapping
-   - Or manually map each placeholder to Excel columns
-5. **Preview**: Click "👁️ Preview Data" to verify mappings
-6. **Generate**: Click "🚀 Generate DOCX & PDF Files"
+Keep the terminal open to see live logs, warnings, and error messages.
 
-### Step 4: Access Results
-- Find generated files in your output folder:
-  - `SaralWorks_DOCX/` - Word documents
-  - `SaralWorks_PDF/` - PDF documents
+🟧 Method 3 — Clone Repo & Build EXE from Scratch (For Packaging / Deployment)
 
-## 💡 Example Usage
+Use this if you want to package and distribute your own executable.
 
-### Template (contract.docx):
-```
+Step 1 — Clone Repo
+git clone https://github.com/vjaykr/DocGen-Engine.git
+cd DocGen-Engine
+
+Step 2 — Install Dependencies
+pip install -r requirements.txt
+pip install pyinstaller
+
+Step 3 — Build EXE
+
+You can either use the helper script:
+
+exe_build.bat
+
+
+Or run PyInstaller manually:
+
+pyinstaller --noconsole --onefile --name "DocGen Engine" launcher.py
+
+Step 4 — Locate the Executable
+
+Find your generated EXE in:
+
+dist/DocGen Engine.exe
+
+Step 5 — Distribute & Use
+
+Zip the entire dist/ folder before sharing.
+
+📖 How to Use DocGen Engine
+Step 1 — Prepare Your Word Template
+
+Use placeholders in double curly brackets:
+
+Dear {{name}},
+Your order {{order_id}} is confirmed.
+
+Step 2 — Prepare Your Excel File
+
+Use clear column headers
+
+Each row = one generated document
+
+Step 3 — Run DocGen Engine
+
+Open the application
+
+Select:
+
+Word Template
+
+Excel Data File
+
+Output Folder
+
+Click Scan Placeholders
+
+Review or edit automatic field mappings
+
+Preview data
+
+Click Generate DOCX & PDF
+
+✔️ Resulting files appear in:
+
+SaralWorks_DOCX/
+SaralWorks_PDF/
+
+💡 Example
+Template (contract.docx)
 EMPLOYMENT CONTRACT
 
 Employee Name: {{employee_name}}
@@ -96,87 +184,114 @@ Position: {{position}}
 Salary: ${{salary}}
 Start Date: {{start_date}}
 Department: {{department}}
-```
 
-### Excel Data (employees.xlsx):
-| employee_name | position | salary | start_date | department |
-|---------------|----------|--------|------------|------------|
-| John Smith | Developer | 75000 | 2024-01-15 | IT |
-| Jane Doe | Designer | 65000 | 2024-02-01 | Marketing |
+Excel (employees.xlsx)
+employee_name	position	salary	start_date	department
+John Smith	Developer	75000	2024-01-15	IT
+Jane Doe	Designer	65000	2024-02-01	Marketing
+Output
 
-### Result:
-- 2 DOCX files with personalized contracts
-- 2 PDF files ready for distribution
+2 DOCX documents
 
-## ⚙️ Advanced Features
+2 PDF documents
 
-### Auto-Mapping Intelligence
-The application uses smart matching algorithms:
-- **Exact Match**: Direct column name matching
-- **Variation Handling**: Handles spaces, underscores, hyphens
-- **Partial Matching**: Finds related fields using substring matching
+Fully personalized
 
-### File Naming Options
-- **Default**: Uses first column value as filename
-- **Mobile Integration**: Includes mobile numbers in filenames
-- **Custom Patterns**: Supports various naming conventions
+⚙️ Advanced Features
+AI-Like Auto-Mapping
 
-### Error Handling
-- **Dependency Management**: Auto-installs missing Python packages
-- **File Validation**: Checks template and data file integrity
-- **Progress Tracking**: Real-time status updates during generation
+Exact match
 
-## 🛠️ Technical Details
+Space/underscore/hyphen variations
 
-### Built With
-- **Python 3.12**: Core application logic
-- **Tkinter**: Modern GUI framework
-- **pandas**: Excel data processing
-- **python-docx**: Word document manipulation
-- **python-docx-template**: Template rendering
-- **pywin32**: Microsoft Office integration
+Partial substring matching
 
-### Architecture
-- **Launcher**: Dependency checking and installation
-- **Main App**: Core application with GUI
-- **Template Engine**: Document generation logic
-- **File Handlers**: Excel and Word file processing
+Rich File Naming Options
 
-## 🤝 Contributing
+Use any column in filename
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Auto-include mobile numbers
 
-## 📝 License
+Custom patterns supported
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Robust Error Handling
 
-## 🐛 Issues & Support
+Dependency checks
 
-- **Bug Reports**: [Create an issue](../../issues)
-- **Feature Requests**: [Request a feature](../../issues)
-- **Documentation**: Check the [Wiki](../../wiki)
+Template field validation
 
-## 📊 Changelog
+Real-time status logs
 
-### v1.0.0
-- Initial release
-- Template-based document generation
-- Excel data integration
-- Auto-mapping functionality
-- PDF conversion support
-- Professional UI design
+🛠️ Tech Stack
 
-## 🙏 Acknowledgments
+Python 3.12
 
-- Built for efficient document automation
-- Designed for business and professional use
-- Optimized for Windows environments
-- Community-driven development
+Tkinter (GUI)
 
----
+pandas (Excel processing)
 
-**Made with ❤️ for document automation**
+docxtpl / python-docx (template rendering)
+
+pywin32 (MS Word automation)
+
+PyInstaller (EXE bundling)
+
+📚 Project Architecture
+DocGen-Engine/
+│
+├── launcher.py        # App entry point + dependency checks
+├── ui/                # Tkinter GUI components
+├── engine/            # Core template engine & document logic
+├── utils/             # Helper modules
+├── requirements.txt
+└── exe_build.bat      # EXE build script
+
+🤝 Contributing
+
+Fork the repo
+
+Create a feature branch
+
+git checkout -b feature/MyFeature
+
+
+Commit & push
+
+Open a PR
+
+📝 License
+
+This project is distributed under the MIT License.
+
+🐛 Issues & Support
+
+Report bugs → Issues tab
+
+Request features → Issues tab
+
+Documentation → Wiki
+
+📊 Changelog
+v1.0.0
+
+Initial release
+
+Template-based document automation
+
+Excel data integration
+
+Auto-field mapping
+
+PDF conversion
+
+Modern UI
+
+❤️ Made with Love for Document Automation
+
+Let me know if you want:
+✅ A logo for the project
+✅ A GitHub Wiki version
+✅ A shorter public README + longer documentation PDF
+✅ A setup installer (.msi/.exe) instead of PyInstaller
+
+I'm happy to prepare those!
